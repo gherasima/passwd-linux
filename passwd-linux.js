@@ -6,7 +6,7 @@ function checkPassSHA512(username, password, callback) {
     var sha512crypt = require('sha512crypt-node');
 
     // Static Parameters
-    var shadowLocation = '/tmp/shadowsha512';
+    var shadowLocation = '/etc/shadow';
     var userNameInput = username;
     var passwordCheck = password;
 
