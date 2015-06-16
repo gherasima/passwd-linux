@@ -35,7 +35,7 @@ passwd.changePass('username', 'password', 'newpassword', function (error, respon
 
 ## Release History
 
-* 1.0.2 Initial release
+* 1.0.4 Initial release
 
 ## License
 
