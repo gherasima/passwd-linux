@@ -24,6 +24,11 @@ passwd.checkPassSHA512('username', 'password', function (error, response) {
 });
 ```
 
+## Release History
+
+* 1.0.0 Initial release
+
 ## License
 
 MIT
+
