@@ -1,6 +1,11 @@
 # passwd-linux
 Node.js module for checking and changing Linux user password
 
+## Installation
+```bash
+$ ...
+```
+
 ## Features
 
     * Supporting SHA512 only
