@@ -14,7 +14,7 @@ $ ...
 ```js
 var passwd = require('passwd-linux');
 
-passwd.checkPassSHA512('share', 'qwerty', function (error, response) {
+passwd.checkPassSHA512('username', 'password', function (error, response) {
     "use strict";
     if (error) {
         console.log(error);
