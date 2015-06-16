@@ -3,7 +3,7 @@ Node.js module for checking and changing Linux user password
 
 ## Installation
 ```bash
-$ ...
+$  npm install passwd-linux
 ```
 
 ## Features

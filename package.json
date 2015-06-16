@@ -1,0 +1,23 @@
+{
+  "name": "passwd-linux",
+  "version": "1.0.0",
+  "description": "Node.js module for checking and changing Linux user password",
+  "main": "passwd-linux.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherasima/passwd-linux.git"
+  },
+  "keywords": [
+    "passwd",
+    "shadow"
+  ],
+  "author": "Gherasim Adrian <gherasim.a@me.com> (http://jsay.org)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gherasima/passwd-linux/issues"
+  },
+  "homepage": "https://github.com/gherasima/passwd-linux"
+}
