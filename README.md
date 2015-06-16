@@ -1,8 +1,11 @@
 # passwd-linux
 Node.js module for checking and changing Linux user password
 
+## Features
 
-# Example
+    * Supporting SHA512 only
+
+# Quick Start
 ```js
 var passwd = require('passwd-linux');
 
@@ -15,3 +18,7 @@ passwd.checkPassSHA512('share', 'qwerty', function (error, response) {
     }
 });
 ```
+
+## License
+
+MIT
