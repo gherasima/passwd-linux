@@ -18,7 +18,7 @@ $  npm install passwd-linux
 
 ## Usage
 
-Check if user exist:
+Check if user exist
 ```js
 var passwd = require('passwd-linux');
 
@@ -32,7 +32,7 @@ passwd.checkUser('username', function (error, response) {
 });
 ```
 
-Change password without verify the old password first:
+Change password if user exist but without verify the old password first
 
 ```js
 var passwd = require('passwd-linux');
@@ -47,7 +47,7 @@ passwd.changePassNV('username', 'password', function (error, response) {
 });
 ```
 
-Change password if user exist and old password is correct (SHA512 only):
+Change password if user exist and old password is correct (SHA512 only)
 
 ```js
 var passwd = require('passwd-linux');
@@ -62,7 +62,7 @@ passwd.changePass('username', 'password', 'newpassword', function (error, respon
 });
 ```
 
-Check if old password is correct (SHA512 only):
+Check if old password is correct (SHA512 only)
 
 ```js
 var passwd = require('passwd-linux');
@@ -88,7 +88,7 @@ passwd.checkPassSHA512('username', 'password', function (error, response) {
 |1.0.2      |released  |Bug fixes   |
 |1.0.3      |released  |Bug fixes   |
 |1.0.4      |released  |Bug fixes   |
-|1.1.0      |released  |Added checkUser and changePassNV|
+|1.1.0      |released  |Added checkUser and changePassNV methods|
 
 
 ## Todo
