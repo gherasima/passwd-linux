@@ -5,7 +5,7 @@
   "dependencies" : {
     "sha512crypt-node" : "*"
   },
-  "description": "Node.js module for checking and changing Linux user password",
+  "description": "Node.js module for checking and changing Linux user and password",
   "main": "passwd-linux.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
