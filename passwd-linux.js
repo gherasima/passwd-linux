@@ -95,26 +95,23 @@ function changePassNV(username, newPassword, callback) {
     var exec = require("child_process").exec;
 
     // First check user and password
-    checkPassSHA512(username, password, function (error, response) {
+    checkUser(username, function (error, response) {
         if (error) {
             console.log(error);
         }
 
-        // if password correct, change user password
-        if (response === 'passwordCorrect') {
+        // if user exist, change user password
+        if (response === 'userExist') {
             exec('echo $pass | passwd --stdin $user', {
                 env: {
                     user: username,
                     pass: newPassword
                 }
-            });             //
+            });
+
             callback(null, 'passChangeOK');
-        } else if (response === 'passwordIncorrect') {
-            callback(null, 'passChangeERROR');
-        } else if (response === 'unknownUser') {
-            callback(null, 'passChangeERROR');
         } else {
-            callback(null, 'passChangeERROR');
+            callback(null, 'unknownUser');
         }
     });
 }
@@ -155,8 +152,9 @@ function checkUser(username, callback) {
     });
 }
 
-
-module.exports.checkPassSHA512 = checkPassSHA512;
-module.exports.changePass = changePass;
 module.exports.checkUser = checkUser;
 module.exports.changePassNV = changePassNV;
+module.exports.changePass = changePass;
+module.exports.checkPassSHA512 = checkPassSHA512;
+
+
