@@ -12,8 +12,8 @@ $  npm install passwd-linux
 
     * Check if user exist
     * Change password without verify the old password first
-    * Change password if user exist and old password is correct (SHA512 only)
-    * Check if old password is correct (SHA512 only)
+    * Change password if user exist and old password is correct (SHA512 only, RHEL 6 & 7)
+    * Check if old password is correct (SHA512 only, RHEL 6 & 7)
 
 
 ## Usage
@@ -89,6 +89,11 @@ passwd.checkPassSHA512('username', 'password', function (error, response) {
 |1.0.3      |released  |Bug fixes   |
 |1.0.4      |released  |Bug fixes   |
 |1.1.0      |released  |Added checkUser and changePassNV|
+
+
+## Todo
+
+* Add support for MD5 (RHEL 4 & 5)
 
 
 ## License
