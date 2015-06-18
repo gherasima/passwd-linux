@@ -1,6 +1,6 @@
 // Global variables
 // var shadowLocation = '/etc/shadow';
-var shadowLocation = '/tmp/shadowsha512';
+var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowmd5';
 
 function checkPassSHA512(username, password, callback) {
     "use strict";
@@ -54,7 +54,60 @@ function checkPassSHA512(username, password, callback) {
 
 function checkPassMD5(username, password, callback) {
     "use strict";
-    callback('To be added in the future');
+
+    // Require
+    var fs = require('fs');
+    var exec = require("child_process").exec;
+
+    // Static Parameters
+    var userNameInput = username;
+    var passwordCheck = password;
+
+    // Open shadow file
+    fs.readFile(shadowLocation, function (error, file) {
+        if (error) {
+            return callback(error); // file does not exit
+        }
+        // file is a buffer, convert to string and then to array
+        var shadowFile = file.toString().split('\n');
+
+        // Check if user exist on the shadow file
+        //  If user exist, set variable 'passwordHashFromFile' to contain full password
+        var passwordHashFromFile; // Example: $1$LkDlMBW4$YgmI0u/JHyYgRY6ioaX7J
+        shadowFile.forEach(function (line) {
+            var shadowLineArray = line.split(":");
+            var userNameFromFile = shadowLineArray[0];
+            if (userNameFromFile === userNameInput) {
+                passwordHashFromFile = shadowLineArray[1];
+            }
+        });
+
+        // If user exist on the shadow file, check if password matches
+        if (passwordHashFromFile) {
+            var fullShadowSplit = passwordHashFromFile.split('$');
+            //var passwordAlgorithm = fullShadowSplit[1];   // Example: 1
+            var passwordSalt = fullShadowSplit[2];          // Example: LkDlMBW4
+            //var passwordHash = fullShadowSplit[3];        // Example: YgmI0u/JHyYgRY6ioaX7J
+
+            // create password from user input and passwordSalt
+            // and check if it matches to passwordHashFromFile
+            exec('openssl passwd -1 -salt $salt $pass', {
+                env: {
+                    salt: passwordSalt,
+                    pass: passwordCheck
+                }
+            }, function (error, stdout, stderr) {
+                // stdout contain the md5 password that openssl generate
+                if (stdout.trim() === passwordHashFromFile) {
+                    callback(null, 'passwordCorrect');
+                } else {
+                    callback(null, 'passwordIncorrect');
+                }
+            });
+        } else {
+            callback(null, 'unknownUser');
+        }
+    });
 }
 
 function changePass(username, password, newPassword, callback) {
@@ -66,7 +119,7 @@ function changePass(username, password, newPassword, callback) {
     // First check user and password
     checkPassSHA512(username, password, function (error, response) {
         if (error) {
-            console.log(error);
+            callback(error);
         }
 
         // if password correct, change user password
@@ -156,5 +209,6 @@ module.exports.checkUser = checkUser;
 module.exports.changePassNV = changePassNV;
 module.exports.changePass = changePass;
 module.exports.checkPassSHA512 = checkPassSHA512;
+module.exports.checkPassMD5 = checkPassMD5;
 
 
