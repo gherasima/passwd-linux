@@ -14,6 +14,7 @@ $  npm install passwd-linux
     * Change password without verify the old password first
     * Change password if user exist and old password is correct (SHA512 only, RHEL 6 & 7)
     * Check if old password is correct (SHA512 only, RHEL 6 & 7)
+    * Check if old password is correct (MD5 only, RHEL 4 & 5)
 
 
 ## Usage
@@ -109,10 +110,10 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 
 ## Todo
 
-* Add support for MD5 (RHEL 4 & 5)
+* Add support for MD5 (RHEL 4 & 5) to the change password method
 
 
 ## License
 
-MIT
+[MIT](LICENSE.md)
 
