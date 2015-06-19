@@ -107,13 +107,15 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.2.0      |released  |Added checkPassMD5 method|
 |1.2.1      |released  |Bug fixes for: changePassNV and checkUser |
 |1.2.2      |released  |Bug fixes for: changePass |
-|1.2.3      |released  |Add support for MD5 (RHEL 4 & 5) to the change password method |
+|1.2.3      |released  |Added support for MD5 to the change password method |
+|1.2.4      |released  |Bug fixes |
 
 
 
 ## Todo
 
-* Change method checkPassMD5 from OpenSSL check (using ("child_process").exec) to javascript. 
+* Change method checkPassMD5 from OpenSSL check (using ("child_process").exec) to javascript.
+* Combine checkPassMD5 and checkPassSHA512 to single method
 
 
 ## License
