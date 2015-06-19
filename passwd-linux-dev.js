@@ -1,6 +1,6 @@
 // Global variables
 // var shadowLocation = '/etc/shadow';
-var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowsha512';
+var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowmd5';
 
 function checkPassSHA512(username, password, callback) {
     "use strict";
@@ -115,42 +115,116 @@ function changePass(username, password, newPassword, callback) {
 
     // Require
     var exec = require("child_process").exec;
+    var fs = require('fs');
 
-    // First check user and password
-    checkPassSHA512(username, password, function (error, response) {
+    var usernameInput = username;
+    var passwordCheck = password;
+
+    // First check if the password is md5 or sha512
+    // Open shadow file
+    fs.readFile(shadowLocation, function (error, file) {
         if (error) {
-            callback(error);
+            return callback(error); // file does not exit
         }
 
-        // if password correct, change user password
-        if (response === 'passwordCorrect') {
-            exec('echo $pass | passwd --stdin $user', {
-                env: {
-                    user: username,
-                    pass: newPassword
-                }
-            }, function (error, stdout, stderr) {
-                // if we have stderr defined then the password did not change
-                if (stderr) {
-                    callback(null, 'passChangeError');
-                    //  if stdout contain 'successfully.' then password change successfully
-                } else if (/successfully\./.test(stdout)) {
-                    callback(null, 'passChangeOK');
+        // file is a buffer, convert to string and then to array
+        var shadowArray = file.toString().split('\n');
+        var userExist;
+        // Check if user exist on the shadow file
+        shadowArray.forEach(function (line) {
+            var shadowLineArray = line.split(":");
+            var usernameOrg = shadowLineArray[0];
+            // if user exist, set passwordAlgorithm
+            if (usernameOrg === usernameInput) {
+                userExist = 1;
+                var passwordArray = shadowLineArray[1].split('$');
+                var passwordAlgorithm = passwordArray[1];
+                // sha512 password change
+                if (passwordAlgorithm === '6') {
+                    // First check user and password
+                    checkPassSHA512(username, passwordCheck, function (error, response) {
+                        if (error) {
+                            callback(error);
+                        }
+                        // if password correct, change user password
+                        if (response === 'passwordCorrect') {
+                            exec('echo $pass | passwd --stdin $user', {
+                                env: {
+                                    user: username,
+                                    pass: newPassword
+                                }
+                            }, function (error, stdout, stderr) {
+                                if (error) {
+                                    return callback(null, 'passChangeError');
+                                }
+                                // if we have stderr defined then the password did not change
+                                if (stderr) {
+                                    callback(null, 'passChangeError');
+                                    //  if stdout contain 'successfully.' then password change successfully
+                                } else if (/successfully\./.test(stdout)) {
+                                    callback(null, 'passChangeOK');
+                                } else {
+                                    // everything else then password did not change
+                                    callback(null, 'passChangeError');
+                                }
+                            });
+                            // if user exit but old password is incorrect
+                        } else if (response === 'passwordIncorrect') {
+                            callback(null, 'oldPasswordIncorrect');
+                            // if user don't exist
+                        } else if (response === 'unknownUser') {
+                            callback(null, 'unknownUser-passChangeERROR');
+                        } else {
+                            callback(null, 'passChangeERROR');
+                        }
+                    });
+                    // md5 password change
+                } else if (passwordAlgorithm === '1') {
+                    // First check user and password
+                    checkPassMD5(username, passwordCheck, function (error, response) {
+                        if (error) {
+                            callback(error);
+                        }
+                        // if password correct, change user password
+                        if (response === 'passwordCorrect') {
+                            exec('echo $pass | passwd --stdin $user', {
+                                env: {
+                                    user: username,
+                                    pass: newPassword
+                                }
+                            }, function (error, stdout, stderr) {
+                                if (error) {
+                                    return callback(null, 'passChangeError');
+                                }
+                                // if we have stderr defined then the password did not change
+                                if (stderr) {
+                                    callback(null, 'passChangeError');
+                                    //  if stdout contain 'successfully.' then password change successfully
+                                } else if (/successfully\./.test(stdout)) {
+                                    callback(null, 'passChangeOK');
+                                } else {
+                                    // everything else then password did not change
+                                    callback(null, 'passChangeError');
+                                }
+                            });
+                            // if user exit but old password is incorrect
+                        } else if (response === 'passwordIncorrect') {
+                            callback(null, 'oldPasswordIncorrect');
+                            // if user don't exist
+                        } else if (response === 'unknownUser') {
+                            callback(null, 'unknownUser-passChangeERROR');
+                        } else {
+                            callback(null, 'passChangeERROR');
+                        }
+                    });
+                } else if (passwordAlgorithm === undefined) {
+                    callback(null, 'user-is-disabled');
                 } else {
-                    // everything else then password did not change
-                    callback(null, 'passChangeError');
+                    // if algorithm is not 6 or 1
+                    callback(null, 'unknown-password-algorithm ' + passwordAlgorithm);
                 }
-            });
-
-        // if user exit but old password is incorrect
-        } else if (response === 'passwordIncorrect') {
-            callback(null, 'oldPasswordIncorrect');
-            // if user don't exist
-        } else if (response === 'unknownUser') {
-            callback(null, 'unknownUser-passChangeERROR');
-        } else {
-            callback(null, 'passChangeERROR');
-        }
+            }
+        });
     });
 }
 
@@ -174,6 +248,9 @@ function changePassNV(username, newPassword, callback) {
                     pass: newPassword
                 }
             }, function (error, stdout, stderr) {
+                if (error) {
+                    return callback(null, 'passChangeError');
+                }
                 // if we have stderr defined then the password did not change
                 if (stderr) {
                     callback(null, 'passChangeError');
