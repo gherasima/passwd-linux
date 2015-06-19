@@ -1,6 +1,6 @@
 {
   "name": "passwd-linux",
-  "version": "1.2.0",
+  "version": "1.2.1",
 
   "dependencies" : {
     "sha512crypt-node" : "*"
