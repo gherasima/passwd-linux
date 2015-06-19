@@ -1,6 +1,6 @@
 // Global variables
 // var shadowLocation = '/etc/shadow';
-var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowmd5';
+var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowsha512';
 
 function checkPassSHA512(username, password, callback) {
     "use strict";
@@ -129,12 +129,25 @@ function changePass(username, password, newPassword, callback) {
                     user: username,
                     pass: newPassword
                 }
-            });             //
-            callback(null, 'passChangeOK');
+            }, function (error, stdout, stderr) {
+                // if we have stderr defined then the password did not change
+                if (stderr) {
+                    callback(null, 'passChangeError');
+                    //  if stdout contain 'successfully.' then password change successfully
+                } else if (/successfully\./.test(stdout)) {
+                    callback(null, 'passChangeOK');
+                } else {
+                    // everything else then password did not change
+                    callback(null, 'passChangeError');
+                }
+            });
+
+        // if user exit but old password is incorrect
         } else if (response === 'passwordIncorrect') {
-            callback(null, 'passChangeERROR');
+            callback(null, 'oldPasswordIncorrect');
+            // if user don't exist
         } else if (response === 'unknownUser') {
-            callback(null, 'passChangeERROR');
+            callback(null, 'unknownUser-passChangeERROR');
         } else {
             callback(null, 'passChangeERROR');
         }

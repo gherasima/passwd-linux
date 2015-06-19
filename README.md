@@ -43,7 +43,7 @@ passwd.changePassNV('username', 'password', function (error, response) {
     if (error) {
         console.log(error);
     } else {
-        console.log(response);
+        console.log(response); // if password successfully changed 'response' will contain 'passChangeOK'
     }
 });
 ```
@@ -58,7 +58,7 @@ passwd.changePass('username', 'password', 'newpassword', function (error, respon
     if (error) {
         console.log(error);
     } else {
-        console.log(response);
+        console.log(response); // if password successfully changed 'response' will contain 'passChangeOK'
     }
 });
 ```
@@ -107,6 +107,7 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.1.0      |released  |Added checkUser and changePassNV methods|
 |1.2.0      |released  |Added checkPassMD5 method|
 |1.2.1      |released  |Bug fixes for: changePassNV and checkUser |
+|1.2.2      |released  |Bug fixes for: changePass |
 
 
 
