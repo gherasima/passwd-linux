@@ -28,7 +28,7 @@ passwd.checkUser('username', function (error, response) {
     if (error) {
         console.log(error);
     } else {
-        console.log(response);
+        console.log(response); // if user exist 'response' will contain 'userExist'
     }
 });
 ```
@@ -106,6 +106,8 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.0.4      |released  |Bug fixes   |
 |1.1.0      |released  |Added checkUser and changePassNV methods|
 |1.2.0      |released  |Added checkPassMD5 method|
+|1.2.1      |released  |Bug fixes for: changePassNV and checkUser |
+
 
 
 ## Todo
