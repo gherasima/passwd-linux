@@ -109,6 +109,7 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.2.2      |released  |Bug fixes for: changePass |
 |1.2.3      |released  |Added support for MD5 to the change password method |
 |1.2.4      |released  |Bug fixes |
+|1.2.5      |released  |Bug fixes |
 
 
 

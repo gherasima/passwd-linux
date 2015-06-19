@@ -1,6 +1,5 @@
 // Global variables
-// var shadowLocation = '/etc/shadow';
-var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowmd5';
+var shadowLocation = '/etc/shadow';
 
 function checkPassSHA512(username, password, callback) {
     "use strict";
