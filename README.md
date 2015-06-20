@@ -62,6 +62,21 @@ passwd.changePass('username', 'password', 'newpassword', function (error, respon
 });
 ```
 
+Check if old password is correct
+
+```js
+var passwd = require('passwd-linux');
+
+passwd.checkPass('username', 'password', function (error, response) {
+    "use strict";
+    if (error) {
+        console.log(error);
+    } else {
+        console.log(response); // response: passwordCorrect or passwordIncorrect
+    }
+});
+```
+
 Check if old password is correct (SHA512 only)
 
 ```js
@@ -72,10 +87,9 @@ passwd.checkPassSHA512('username', 'password', function (error, response) {
     if (error) {
         console.log(error);
     } else {
-        console.log(response);
+        console.log(response);  // response: passwordCorrect or passwordIncorrect
     }
 });
-
 ```
 
 Check if old password is correct (MD5 only)
@@ -88,10 +102,9 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
     if (error) {
         console.log(error);
     } else {
-        console.log(response);
+        console.log(response); // response: passwordCorrect or passwordIncorrect
     }
 });
-
 ```
 
 ## Release History
@@ -110,13 +123,13 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.2.3      |released  |Added support for MD5 to the change password method |
 |1.2.4      |released  |Bug fixes |
 |1.2.5      |released  |Bug fixes |
+|1.3.0      |released  |Combine checkPassMD5 and checkPassSHA512 to single method: checkPass |
 
 
 
 ## Todo
 
 * Change method checkPassMD5 from OpenSSL check (using ("child_process").exec) to javascript.
-* Combine checkPassMD5 and checkPassSHA512 to single method
 
 
 ## License

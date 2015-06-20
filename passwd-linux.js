@@ -1,5 +1,6 @@
 // Global variables
-var shadowLocation = '/etc/shadow';
+//var shadowLocation = '/etc/shadow';
+var shadowLocation = '/Users/gherasima/dev/node/passwd-linux/tmp/shadowsha512';
 
 function checkPassSHA512(username, password, callback) {
     "use strict";
@@ -106,6 +107,85 @@ function checkPassMD5(username, password, callback) {
         } else {
             callback(null, 'unknownUser');
         }
+    });
+}
+
+function checkPass(username, password, callback) {
+    "use strict";
+
+    // Require
+    var fs = require('fs');
+
+    var usernameInput = username;
+    var passwordCheck = password;
+
+    // First check if the password is md5 or sha512
+    // Open shadow file
+    fs.readFile(shadowLocation, function (error, file) {
+        if (error) {
+            return callback(error); // file does not exit
+        }
+
+        // file is a buffer, convert to string and then to array
+        var shadowArray = file.toString().split('\n');
+        var userExist;
+        // Check if user exist on the shadow file
+        shadowArray.forEach(function (line) {
+            var shadowLineArray = line.split(":");
+            var usernameOrg = shadowLineArray[0];
+            // if user exist, set passwordAlgorithm
+            if (usernameOrg === usernameInput) {
+                userExist = 1;
+                var passwordArray = shadowLineArray[1].split('$');
+                var passwordAlgorithm = passwordArray[1];
+                // sha512 password change
+                if (passwordAlgorithm === '6') {
+                    // First check user and password
+                    checkPassSHA512(username, passwordCheck, function (error, response) {
+                        if (error) {
+                            callback(error);
+                        }
+                        // if password correct
+                        if (response === 'passwordCorrect') {
+                            callback(null, response);
+                            // if user exit but old password is incorrect
+                        } else if (response === 'passwordIncorrect') {
+                            callback(null, response);
+                            // if user don't exist
+                        } else if (response === 'unknownUser') {
+                            callback(null, 'unknownUser-passChangeERROR');
+                        } else {
+                            callback(null, 'passChangeERROR');
+                        }
+                    });
+                    // md5 password change
+                } else if (passwordAlgorithm === '1') {
+                    // First check user and password
+                    checkPassMD5(username, passwordCheck, function (error, response) {
+                        if (error) {
+                            callback(error);
+                        }
+                        // if password correct
+                        if (response === 'passwordCorrect') {
+                            callback(null, response);
+                            // if user exit but old password is incorrect
+                        } else if (response === 'passwordIncorrect') {
+                            callback(null, response);
+                            // if user don't exist
+                        } else if (response === 'unknownUser') {
+                            callback(null, 'unknownUser-passChangeERROR');
+                        } else {
+                            callback(null, 'passChangeERROR');
+                        }
+                    });
+                } else if (passwordAlgorithm === undefined) {
+                    callback(null, 'user-is-disabled');
+                } else {
+                    // if algorithm is not 6 or 1
+                    callback(null, 'unknown-password-algorithm ' + passwordAlgorithm);
+                }
+            }
+        });
     });
 }
 
@@ -309,5 +389,6 @@ module.exports.changePassNV = changePassNV;
 module.exports.changePass = changePass;
 module.exports.checkPassSHA512 = checkPassSHA512;
 module.exports.checkPassMD5 = checkPassMD5;
+module.exports.checkPass = checkPass;
 
 
