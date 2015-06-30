@@ -23,6 +23,9 @@ function checkPassSHA512(username, password, callback) {
         // Check if user exist on the shadow file
         //  If user exist, set variable 'passwordHashFromFile' to contain full password
         var passwordHashFromFile; // Example: $6$/tDzh.dK$AwngrsMR/BihvbnTeXo9GIWJPd... (qwerty)
+
+
+
         shadowFile.forEach(function (line) {
             var shadowLineArray = line.split(":");
             var userNameFromFile = shadowLineArray[0];
@@ -127,15 +130,20 @@ function checkPass(username, password, callback) {
 
         // file is a buffer, convert to string and then to array
         var shadowArray = file.toString().split('\n');
-        var userExist;
+
         // Check if user exist on the shadow file
+        // If user exist, set variable 'passwordHashFromFile' to contain full password
+        var fullPasswordHashFromFile;   // Example: $6$/tDzh.dK$AwngrsMR/BihvbnTeXo9GIWJPd... (qwerty)
         shadowArray.forEach(function (line) {
             var shadowLineArray = line.split(":");
             var usernameOrg = shadowLineArray[0];
-            // if user exist, set passwordAlgorithm
             if (usernameOrg === usernameInput) {
-                userExist = 1;
-                var passwordArray = shadowLineArray[1].split('$');
+                fullPasswordHashFromFile = shadowLineArray;
+            }
+        });
+
+            if (typeof fullPasswordHashFromFile !== 'undefined') {
+                var passwordArray = fullPasswordHashFromFile[1].split('$');
                 var passwordAlgorithm = passwordArray[1];
                 // sha512 password change
                 if (passwordAlgorithm === '6') {
@@ -178,13 +186,18 @@ function checkPass(username, password, callback) {
                         }
                     });
                 } else if (passwordAlgorithm === undefined) {
-                    callback(null, 'user-is-disabled');
+                    callback(null, 'userDisabled');
                 } else {
                     // if algorithm is not 6 or 1
                     callback(null, 'unknown-password-algorithm ' + passwordAlgorithm);
                 }
+
+            } else {
+                callback(null, 'unknownUser');
             }
-        });
+
+
+
     });
 }
 
@@ -207,15 +220,20 @@ function changePass(username, password, newPassword, callback) {
 
         // file is a buffer, convert to string and then to array
         var shadowArray = file.toString().split('\n');
-        var userExist;
+
         // Check if user exist on the shadow file
+        // If user exist, set variable 'passwordHashFromFile' to contain full password
+        var fullPasswordHashFromFile;   // Example: $6$/tDzh.dK$AwngrsMR/BihvbnTeXo9GIWJPd... (qwerty)
         shadowArray.forEach(function (line) {
             var shadowLineArray = line.split(":");
             var usernameOrg = shadowLineArray[0];
-            // if user exist, set passwordAlgorithm
             if (usernameOrg === usernameInput) {
-                userExist = 1;
-                var passwordArray = shadowLineArray[1].split('$');
+                fullPasswordHashFromFile = shadowLineArray;
+            }
+        });
+
+        if (typeof fullPasswordHashFromFile !== 'undefined') {
+                var passwordArray = fullPasswordHashFromFile[1].split('$');
                 var passwordAlgorithm = passwordArray[1];
                 // sha512 password change
                 if (passwordAlgorithm === '6') {
@@ -238,17 +256,19 @@ function changePass(username, password, newPassword, callback) {
                                 // if we have stderr defined then the password did not change
                                 if (stderr) {
                                     callback(null, 'passChangeError');
+
                                     //  if stdout contain 'successfully.' then password change successfully
                                 } else if (/successfully\./.test(stdout)) {
                                     callback(null, 'passChangeOK');
                                 } else {
                                     // everything else then password did not change
                                     callback(null, 'passChangeError');
+
                                 }
                             });
                             // if user exit but old password is incorrect
                         } else if (response === 'passwordIncorrect') {
-                            callback(null, 'oldPasswordIncorrect');
+                            callback(null, 'passwordIncorrect');
                             // if user don't exist
                         } else if (response === 'unknownUser') {
                             callback(null, 'unknownUser-passChangeERROR');
@@ -296,13 +316,16 @@ function changePass(username, password, newPassword, callback) {
                         }
                     });
                 } else if (passwordAlgorithm === undefined) {
-                    callback(null, 'user-is-disabled');
+                    callback(null, 'userDisabled');
                 } else {
                     // if algorithm is not 6 or 1
                     callback(null, 'unknown-password-algorithm ' + passwordAlgorithm);
                 }
+            } else {
+                callback(null, 'unknownUser');
             }
-        });
+
+
     });
 }
 

@@ -124,6 +124,7 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.2.4      |released  |Bug fixes |
 |1.2.5      |released  |Bug fixes |
 |1.3.0      |released  |Combine checkPassMD5 and checkPassSHA512 to single method: checkPass |
+|1.3.1      |released  |Bug fixes: Now changePass and checkPass return unknownUser|
 
 
 
