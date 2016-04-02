@@ -142,7 +142,15 @@ function checkPass(username, password, callback) {
             }
         });
 
+
             if (typeof fullPasswordHashFromFile !== 'undefined') {
+                // Allow users with empty password to log in.
+                // Disabled users will not be able to (where shadow is set to ! or *)
+                if (!fullPasswordHashFromFile[1].length && !passwordCheck.length) {
+                    callback(null, 'passwordCorrect');
+                    return;
+                }
+
                 var passwordArray = fullPasswordHashFromFile[1].split('$');
                 var passwordAlgorithm = passwordArray[1];
                 // sha512 password change
