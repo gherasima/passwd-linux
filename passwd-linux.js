@@ -346,7 +346,7 @@ function changePassNV(username, newPassword, callback) {
     // First check user and password
     checkUser(username, function (error, response) {
         if (error) {
-            callback(error);
+            return callback(error);
         }
 
         // if user exist, try to change user password
