@@ -46,7 +46,7 @@ function checkPassword(username, password, callback) {
             var algorithm = shadowSplit[1];
             var passwordSalt = shadowSplit[2];
             if (algorithm === '6') {
-                var sha512crypt = require('/home/adriang/node_modules/sha512crypt-node/sha512crypt.js');
+                var sha512crypt = require('sha512crypt-node');
                 if (sha512crypt.sha512crypt(password, passwordSalt) === passwordHash) {
                     callback(null, true);
                 } else {
@@ -102,7 +102,7 @@ function changePassword(username, password, callback, algorithm = 6) {
             passwordSalt += possible.charAt(Math.floor(Math.random() * possible.length));
 
             if (algorithm === 6) {
-                var sha512crypt = require('/home/adriang/node_modules/sha512crypt-node/sha512crypt.js');
+                var sha512crypt = require('sha512crypt-node');
                 passwordHash = sha512crypt.sha512crypt(password, passwordSalt);
                 var newLine = username + ':' + passwordHash + ':' + userSetting
                 var argRegEx = new RegExp(username + '.*');

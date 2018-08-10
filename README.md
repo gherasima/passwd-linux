@@ -11,101 +11,65 @@ $  npm install passwd-linux
 ## Features
 
     * Check if user exist.
-    * Check if old password is correct.
-    * Change password if user exist but without verify the old password.
-    * Change password if user exist and old password is correct
+    * Check if password is correct.
+    * Change password if user exist.
 
 
 ## Usage
 
 Check if user exist
 ```js
-var passwd = require('passwd-linux');
-
-passwd.checkUser('username', function (error, response) {
-    "use strict";
-    if (error) {
-        console.log(error);
+passwd.userExist(username, function (err, response) {
+    if (err) {
+        console.log(err);
     } else {
-        console.log(response); // if user exist 'response' will contain 'userExist'
+        if (response) {
+            console.log('User exist');
+        } else {
+            console.log('Unknown user');
+
+        }
     }
 });
+
 ```
 
-Change password if user exist but without verify the old password first
+Check if password is correct
 
 ```js
-var passwd = require('passwd-linux');
-
-passwd.changePassNV('username', 'password', function (error, response) {
-    "use strict";
-    if (error) {
-        console.log(error);
+passwd.checkPassword(username, password, function (err, response) {
+    if (err) {
+        console.log(err);
     } else {
-        console.log(response); // if password successfully changed 'response' will contain 'passChangeOK'
+        if (response) {
+            console.log('Password correct');
+        } else {
+            console.log('Password is not correct');
+        }
     }
 });
 ```
 
-Change password if user exist and old password is correct
+Change password if user exist
 
 ```js
-var passwd = require('passwd-linux');
-
-passwd.changePass('username', 'password', 'newpassword', function (error, response) {
-    "use strict";
-    if (error) {
-        console.log(error);
+passwd.changePassword(username, password, function (err, response) {
+    if (err) {
+        console.log(err);
     } else {
-        console.log(response); // if password successfully changed 'response' will contain 'passChangeOK'
+        if (response) {
+            console.log('Password successfully changed');
+        } else {
+            console.log('Error changing password');
+        }
     }
-});
+}, 6);
+
 ```
 
-Check if old password is correct
 
-```js
-var passwd = require('passwd-linux');
 
-passwd.checkPass('username', 'password', function (error, response) {
-    "use strict";
-    if (error) {
-        console.log(error);
-    } else {
-        console.log(response); // response: passwordCorrect or passwordIncorrect
-    }
-});
-```
 
-Check if old password is correct (SHA512 only)
-
-```js
-var passwd = require('passwd-linux');
-
-passwd.checkPassSHA512('username', 'password', function (error, response) {
-    "use strict";
-    if (error) {
-        console.log(error);
-    } else {
-        console.log(response);  // response: passwordCorrect or passwordIncorrect
-    }
-});
-```
-
-Check if old password is correct (MD5 only)
-
-```js
-var passwd = require('passwd-linux');
-
-passwd.checkPassMD5('username', 'password', function (error, response) {
-    "use strict";
-    if (error) {
-        console.log(error);
-    } else {
-        console.log(response); // response: passwordCorrect or passwordIncorrect
-    }
-});
-```
 
 ## Release History
 
@@ -126,7 +90,7 @@ passwd.checkPassMD5('username', 'password', function (error, response) {
 |1.3.0      |released  |Combine checkPassMD5 and checkPassSHA512 to single method: checkPass |
 |1.3.1      |released  |Bug fixes: Now changePass and checkPass return unknownUser|
 
-
+|2.0.0      |released  |Rewrite all methods to satisfy 2 open issues|
 
 ## Todo
 
