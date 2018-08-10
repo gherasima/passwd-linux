@@ -2,7 +2,6 @@
 
 var passwd = require('./passwd-linux');
 
-
 var username = process.argv[2]
 var password = process.argv[3]
 passwd.changePassword(username, password, function (err, response) {
