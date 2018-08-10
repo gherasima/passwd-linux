@@ -89,7 +89,6 @@ passwd.changePassword(username, password, function (err, response) {
 |1.2.5      |released  |Bug fixes |
 |1.3.0      |released  |Combine checkPassMD5 and checkPassSHA512 to single method: checkPass |
 |1.3.1      |released  |Bug fixes: Now changePass and checkPass return unknownUser|
-
 |2.0.0      |released  |Rewrite all methods to satisfy 2 open issues|
 
 ## Todo
