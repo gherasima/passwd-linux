@@ -96,7 +96,7 @@ function changePassword(username, password, callback, algorithm = 6) {
 
         if (userFinded) {
             var passwordHash;
-            var passwordSalt;;
+            var passwordSalt = '';
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             for (var i = 0; i < 5; i++)
             passwordSalt += possible.charAt(Math.floor(Math.random() * possible.length));
